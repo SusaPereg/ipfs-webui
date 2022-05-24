@@ -375,7 +375,7 @@ const actions = () => ({
           ipfs.pin.rm(file.cid)
         )))
       }
-      //DELETE METADATA
+      // DELETE METADATA
 
       const src = files[0].path
       const path = src.slice(0, src.lastIndexOf('/'))
@@ -466,7 +466,7 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      await ipfs.files.cp(realMfsPath(src), realMfsPath(dst)) //UPDATE METADATA
+      await ipfs.files.cp(realMfsPath(src), realMfsPath(dst)) // UPDATE METADATA
     } finally {
       await store.doFilesFetch()
     }
@@ -481,7 +481,7 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      await ipfs.files.mkdir(realMfsPath(path), { //UPDATE METADATA
+      await ipfs.files.mkdir(realMfsPath(path), { // UPDATE METADATA
         parents: true
       })
     } finally {
@@ -496,7 +496,7 @@ const actions = () => ({
    */
   doFilesPin: (cid) => perform(ACTIONS.PIN_ADD, async (ipfs, { store }) => {
     try {
-      return await ipfs.pin.add(cid) //UPDATE METADATA
+      return await ipfs.pin.add(cid) // UPDATE METADATA
     } finally {
       await store.doPinsFetch()
     }
@@ -509,7 +509,7 @@ const actions = () => ({
    */
   doFilesUnpin: (cid) => perform(ACTIONS.PIN_REMOVE, async (ipfs, { store }) => {
     try {
-      return await ipfs.pin.rm(cid) //UPDATE METADATA
+      return await ipfs.pin.rm(cid) // UPDATE METADATA
     } finally {
       await store.doPinsFetch()
     }
@@ -538,7 +538,7 @@ const actions = () => ({
         if (files && files.path === link && url) {
           await store.doFilesFetch()
         } else {
-          await store.doUpdateHash(link) //UPDATE hash
+          await store.doUpdateHash(link) // UPDATE hash
         }
       } catch (e) {
         console.error(e)
@@ -646,7 +646,7 @@ const dirStats = async (ipfs, cid, { path, isRoot, sorting }) => {
     if (parentInfo && (parentInfo.isMfs || !parentInfo.isRoot)) {
       const realPath = parentInfo.realPath
 
-      if (realPath && realPath.startsWith('/ipns')) { //UPDATE HASH
+      if (realPath && realPath.startsWith('/ipns')) { // UPDATE HASH
         parentInfo.realPath = await last(ipfs.name.resolve(parentInfo.realPath))
       }
 
