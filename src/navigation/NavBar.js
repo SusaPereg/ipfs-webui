@@ -9,6 +9,7 @@ import StrokeWeb from '../icons/StrokeWeb'
 import StrokeCube from '../icons/StrokeCube'
 import StrokeSettings from '../icons/StrokeSettings'
 import StrokeIpld from '../icons/StrokeIpld'
+import StrokeUser from '../icons/StrokeUser'
 
 // Styles
 import './NavBar.css'
@@ -71,6 +72,7 @@ export const NavBar = ({ t }) => {
           <NavLink to='/files' icon={StrokeWeb}>{t('files:title')}</NavLink>
           <NavLink to='/explore' icon={StrokeIpld}>{t('explore:tabName')}</NavLink>
           <NavLink to='/peers' icon={StrokeCube}>{t('peers:title')}</NavLink>
+          <NavLink to='/login' icon={StrokeUser}>{t('login:title')}</NavLink>
           <NavLink to='/settings' icon={StrokeSettings}>{t('settings:title')}</NavLink>
         </div>
       </div>

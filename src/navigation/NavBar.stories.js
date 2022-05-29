@@ -13,7 +13,7 @@ storiesOf('NavBar', module)
     <div className='sans-serif vh-100 bg-navy' style={{ width: 156 }}>
       <NavBar
         className='w-100'
-        isSettingsEnabled={boolean('isSettingsEnabled', true)}
+        isSettingsEnabled={boolean('isSettingsEnabled', true)} // QUIZAS DEBA AÑADIR LOGIN
         open={boolean('open', true)}
         onToggle={action('onToggle')}
         t={i18n.getFixedT('en', 'status')} />

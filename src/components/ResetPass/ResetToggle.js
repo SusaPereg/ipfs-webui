@@ -7,10 +7,9 @@ const PasswordResetForm = Userfront.build({
   toolId: 'dkbmmo'
 })
 
-const ResetToggle = ({ t }) => {
+const ResetToggle = () => {
   return (
     <div>
-      {t('ResetToggle.label')}
       <PasswordResetForm />
     </div>
   )

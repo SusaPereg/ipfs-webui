@@ -73,7 +73,7 @@ export class App extends Component {
               </div>
             </div>
             <main className='bg-white pv3 pa3 pa4-l'>
-              { (ipfsReady || url === '/welcome' || url.startsWith('/settings'))
+              { (ipfsReady || url === '/welcome' || url.startsWith('/login') || url.startsWith('/settings'))
                 ? <Page />
                 : <ComponentLoader />
               }

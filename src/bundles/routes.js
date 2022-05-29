@@ -10,6 +10,7 @@ import WelcomePage from '../welcome/LoadableWelcomePage'
 import BlankPage from '../blank/BlankPage'
 import LoginPage from '../login/LoadableLoginPage'
 import resetPage from '../login/ResetPassword'
+// import signPage from '../login/SignUp'
 
 export default createRouteBundle({
   '/explore': StartExploringPage,
@@ -26,6 +27,6 @@ export default createRouteBundle({
   '/status*': StatusPage,
   '/': StatusPage,
   '': StatusPage,
-  '/login/reset': resetPage,
+  '/reset': resetPage,
   '/login*': LoginPage
 }, { routeInfoSelector: 'selectHash' })
