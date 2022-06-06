@@ -3,10 +3,17 @@ import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
 import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
+import Box from '../components/box/Box'
 import Userfront from '@userfront/react'
+import Title from './Title'
 
+Userfront.init('vbqq788b')
 const LoginForm = Userfront.build({
-  toolId: 'alnkkd'
+  toolId: 'mdladd'
+})
+
+const SignupForm = Userfront.build({
+  toolId: 'aolror'
 })
 
 const LoginPage = ({ t }) => (
@@ -14,7 +21,17 @@ const LoginPage = ({ t }) => (
     <Helmet>
       <title>{t('title')} | IPFS</title>
     </Helmet>
-    <LoginForm />
+    <Box className='mb3 pa4-l pa2'>
+      <div className='lh-copy charcoal'>
+        <LoginForm />
+      </div>
+    </Box>
+    <Box className='mb3 pa4-l pa2'>
+      <div className='lh-copy charcoal'>
+        <Title>{t('Not a member? Sing up here.')}</Title>
+        <SignupForm />
+      </div>
+    </Box>
   </div>
 )
 

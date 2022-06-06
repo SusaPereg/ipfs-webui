@@ -4,7 +4,7 @@ import { connect } from 'redux-bundler-react'
 import Userfront from '@userfront/react'
 
 const PasswordResetForm = Userfront.build({
-  toolId: 'dkbmmo'
+  toolId: 'rkaoka'
 })
 
 const ResetToggle = () => {
