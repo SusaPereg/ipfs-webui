@@ -72,7 +72,7 @@ export const NavBar = ({ t }) => {
           <NavLink to='/files' icon={StrokeWeb}>{t('files:title')}</NavLink>
           <NavLink to='/explore' icon={StrokeIpld}>{t('explore:tabName')}</NavLink>
           <NavLink to='/peers' icon={StrokeCube}>{t('peers:title')}</NavLink>
-          <NavLink to='/login' icon={StrokeUser}>{t('login:title')}</NavLink>
+          <NavLink to='/loogin' icon={StrokeUser}>{t('login:title')}</NavLink>
           <NavLink to='/settings' icon={StrokeSettings}>{t('settings:title')}</NavLink>
         </div>
       </div>

@@ -24,6 +24,7 @@ import createAnalyticsBundle from './analytics'
 import experimentsBundle from './experiments'
 import cliTutorModeBundle from './cli-tutor-mode'
 import gatewayBundle from './gateway'
+import authBundle from './auth'
 
 export default composeBundles(
   createCacheBundle({
@@ -51,6 +52,7 @@ export default composeBundles(
   experimentsBundle,
   ipfsDesktop,
   repoStats,
+  authBundle,
   cliTutorModeBundle,
   createAnalyticsBundle({})
 )

@@ -9,6 +9,7 @@ import AnalyticsPage from '../settings/AnalyticsPage'
 import WelcomePage from '../welcome/LoadableWelcomePage'
 import BlankPage from '../blank/BlankPage'
 import LoginPage from '../login/LoadableLoginPage'
+import Login from '../components/auth/LoadableLogin'
 import resetPage from '../login/ResetPassword'
 // import signPage from '../login/SignUp'
 
@@ -28,5 +29,6 @@ export default createRouteBundle({
   '/': StatusPage,
   '': StatusPage,
   '/reset': resetPage,
-  '/login*': LoginPage
+  '/login*': LoginPage,
+  'loogin*': Login
 }, { routeInfoSelector: 'selectHash' })
