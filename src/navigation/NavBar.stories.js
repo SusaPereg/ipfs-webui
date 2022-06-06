@@ -14,6 +14,7 @@ storiesOf('NavBar', module)
       <NavBar
         className='w-100'
         isSettingsEnabled={boolean('isSettingsEnabled', true)} // QUIZAS DEBA AÑADIR LOGIN
+        isLoginEnabled={boolean('isLoginEnabled', true)}
         open={boolean('open', true)}
         onToggle={action('onToggle')}
         t={i18n.getFixedT('en', 'status')} />
