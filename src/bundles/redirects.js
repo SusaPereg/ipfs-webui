@@ -15,6 +15,7 @@ const redirectsBundle = {
   reactToIpfsConnectionFail: createSelector(
     'selectIpfsInitFailed',
     'selectHash',
+    'selectLoginInvalid',
     (failed, hash) => {
       if (failed && hash !== '/welcome' && !hash.startsWith('/settings') && !hash.startsWith('/login')) {
         return { actionCreator: 'doUpdateHash', args: ['#/welcome'] }
