@@ -4,17 +4,8 @@ import { connect } from 'redux-bundler-react'
 import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
 import Box from '../components/box/Box'
-import Userfront from '@userfront/react'
+import Login from '../components/auth/login.component'
 import Title from './Title'
-
-Userfront.init('vbqq788b')
-const LoginForm = Userfront.build({
-  toolId: 'mdladd'
-})
-
-const SignupForm = Userfront.build({
-  toolId: 'aolror'
-})
 
 const LoginPage = ({ t }) => (
   <div data-id='LoginPage' className='mw9 center'>
@@ -23,7 +14,7 @@ const LoginPage = ({ t }) => (
     </Helmet>
     <Box className='mb3 pa4-l pa2'>
       <div className='lh-copy charcoal'>
-        <LoginForm />
+       <Route exact path="/login" component={Login} />
       </div>
     </Box>
     <Box className='mb3 pa4-l pa2'>
