@@ -5,13 +5,11 @@ import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
 import Box from '../components/box/Box'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
 import { auth } from './base'
 
 const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -19,7 +17,6 @@ const LoginPage = ({ t }) => {
       signInWithEmailAndPassword(auth, email, password).catch((error) =>
         console.log(error)
       )
-      navigate('/')
     }
     onRegister()
   }
