@@ -1,39 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
 import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
 import Box from '../components/box/Box'
-import Userfront from '@userfront/react'
-import Title from './Title'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
-Userfront.init('vbqq788b')
-const LoginForm = Userfront.build({
-  toolId: 'mdladd'
-})
+const LoginPage = ({ t }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-const SignupForm = Userfront.build({
-  toolId: 'aolror'
-})
-
-const LoginPage = ({ t }) => (
-  <div data-id='LoginPage' className='mw9 center'>
-    <Helmet>
-      <title>{t('title')} | IPFS</title>
-    </Helmet>
-    <Box className='mb3 pa4-l pa2'>
-      <div className='lh-copy charcoal'>
-        <LoginForm />
-      </div>
-    </Box>
-    <Box className='mb3 pa4-l pa2'>
-      <div className='lh-copy charcoal'>
-        <Title>{t('Not a member? Sing up here.')}</Title>
-        <SignupForm />
-      </div>
-    </Box>
-  </div>
-)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    function onRegister() {
+      signInWithEmailAndPassword(auth, email, password).catch((error) =>
+        console.log(error)
+      );
+      navigate("/");
+    }
+    onRegister();
+  };
+  return(
+    <div data-id='LoginPage' className='mw9 center'>
+      <Helmet>
+        <title>{t('title')} | IPFS</title>
+      </Helmet>
+      <Box className='mb3 pa4-l pa2'>
+        <div className='lh-copy charcoal'>
+          <form className="loginForm" onSubmit={handleSubmit}>
+            <input
+              placeholder="email"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+            <input
+              placeholder="password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+            <button>Login</button>
+          </form>
+        </div>
+      </Box>
+    </div>
+  )
+}
+  
 
 export default connect(
   withTour(withTranslation('login')(LoginPage))
