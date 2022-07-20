@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALLOW_ORIGINS='"http://localhost:3000", "https://webui.ipfs.io", "https://dev.webui.ipfs.io"'
+ALLOW_ORIGINS='"http://localhost:3000", "https://webui.ipfs.io", "https://dev.webui.ipfs.io", "http://localhost:8080"'
 
 # stop executing if anything fails
 set -e

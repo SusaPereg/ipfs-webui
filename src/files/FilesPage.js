@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { findDOMNode } from 'react-dom'
 import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
@@ -14,12 +14,15 @@ import InfoBoxes from './info-boxes/InfoBoxes'
 import FilePreview from './file-preview/FilePreview'
 import FilesList from './files-list/FilesList'
 import { getJoyrideLocales } from '../helpers/i8n'
+// firebase
+import { AuthContext } from '../login/AuthProvider'
+import { Redirect } from 'react-router-dom'
 
 // Icons
 import Modals, { DELETE, NEW_FOLDER, SHARE, RENAME, ADD_BY_PATH, CLI_TUTOR_MODE, PINNING } from './modals/Modals'
 import Header from './header/Header'
 import FileImportStatus from './file-import-status/FileImportStatus'
-
+// PONER AQUI SI NO HAY CURRENT USER MANDAR AL LOGIN
 const FilesPage = ({
   doFetchPinningServices, doFilesFetch, doPinsFetch, doFilesSizeGet, doFilesDownloadLink, doFilesWrite, doFilesAddPath, doUpdateHash,
   doFilesUpdateSorting, doFilesNavigateTo, doFilesMove, doSetCliOptions, doFetchRemotePins, remotePins, doExploreUserProvidedPath,
@@ -27,6 +30,7 @@ const FilesPage = ({
   files, filesPathInfo, pinningServices, toursEnabled, handleJoyrideCallback, isCliTutorModeEnabled, cliOptions, t
 }) => {
   const contextMenuRef = useRef()
+  const { currentUser } = useContext(AuthContext)
   const [downloadAbort, setDownloadAbort] = useState(null)
   const [downloadProgress, setDownloadProgress] = useState(null)
   const [modals, setModals] = useState({ show: null, files: null })
@@ -56,6 +60,9 @@ const FilesPage = ({
     files && files.content && doFetchRemotePins(files.content)
   }, [files, pinningServices, doFetchRemotePins])
   */
+  if (!currentUser) {
+    return (<Redirect to={{ pathname: '/login', state: { from: '' } }} />)
+  }
 
   const onDownload = async (files) => {
     if (downloadProgress !== null) {
