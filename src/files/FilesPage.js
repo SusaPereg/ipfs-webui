@@ -66,6 +66,7 @@ const FilesPage = ({
     console.log(currentUser)
   } else {
     console.log('Not logged in')
+    // navigate('/login')
   }
 
   const onDownload = async (files) => {
