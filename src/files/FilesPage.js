@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { findDOMNode } from 'react-dom'
 import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
@@ -15,7 +15,8 @@ import FilePreview from './file-preview/FilePreview'
 import FilesList from './files-list/FilesList'
 import { getJoyrideLocales } from '../helpers/i8n'
 // firebase
-import { auth } from '../login/base'
+// import { auth } from '../login/base'
+import { AuthContext } from '../login/AuthProvider'
 // import { getAuth } from 'firebase/auth'
 
 // Icons
@@ -30,7 +31,7 @@ const FilesPage = ({
   files, filesPathInfo, pinningServices, toursEnabled, handleJoyrideCallback, isCliTutorModeEnabled, cliOptions, t
 }) => {
   const contextMenuRef = useRef()
-  const user = auth.currentUser
+  const { currentUser } = useContext(AuthContext)
   const [downloadAbort, setDownloadAbort] = useState(null)
   const [downloadProgress, setDownloadProgress] = useState(null)
   const [modals, setModals] = useState({ show: null, files: null })
@@ -60,8 +61,9 @@ const FilesPage = ({
     files && files.content && doFetchRemotePins(files.content)
   }, [files, pinningServices, doFetchRemotePins])
   */
-  if (user) {
-    console.log('Logged in')
+  if (currentUser != null) {
+    console.log('if del file')
+    console.log(currentUser)
   } else {
     console.log('Not logged in')
   }

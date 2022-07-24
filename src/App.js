@@ -19,6 +19,9 @@ import Connected from './components/connected/Connected'
 import TourHelper from './components/tour/TourHelper'
 import FilesExploreForm from './files/explore-form/FilesExploreForm'
 
+// firebase
+import { AuthProvider } from './login/AuthProvider'
+
 export class App extends Component {
   static propTypes = {
     doTryInitIpfs: PropTypes.func.isRequired,
@@ -72,12 +75,14 @@ export class App extends Component {
                 <Connected className='joyride-app-status' />
               </div>
             </div>
-            <main className='bg-white pv3 pa3 pa4-l'>
-              { (ipfsReady || url === '/welcome' || url.startsWith('/login') || url.startsWith('/settings'))
-                ? <Page />
-                : <ComponentLoader />
-              }
-            </main>
+            <AuthProvider>
+              <main className='bg-white pv3 pa3 pa4-l'>
+                { (ipfsReady || url === '/welcome' || url.startsWith('/login') || url.startsWith('/settings'))
+                  ? <Page />
+                  : <ComponentLoader />
+                }
+              </main>
+            </AuthProvider>
           </div>
           <div className='navbar-container flex-none-l bg-navy'>
             <NavBar />

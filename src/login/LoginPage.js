@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
 import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
 import Box from '../components/box/Box'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth } from './base'
+import { AuthContext } from '../login/AuthProvider'
 
 const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const currentUser = useContext(AuthContext)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -17,10 +19,18 @@ const LoginPage = ({ t }) => {
       signInWithEmailAndPassword(auth, email, password).catch((error) =>
         console.log(error)
       )
-      console.log('Successfull login')
+      console.log('Successful login')
     }
     onRegister()
   }
+  const clickLogOut = () => {
+    if (currentUser) {
+      signOut(auth)
+    } else {
+      console.log('no user connected')
+    }
+  }
+
   return (
     <div data-id='LoginPage' className='mw9 center'>
       <Helmet>
@@ -41,6 +51,7 @@ const LoginPage = ({ t }) => {
             ></input>
             <button>Login</button>
           </form>
+          <button onClick={clickLogOut}>Log Out</button>
         </div>
       </Box>
     </div>
@@ -50,88 +61,3 @@ const LoginPage = ({ t }) => {
 export default connect(
   withTour(withTranslation('login')(LoginPage))
 )
-
-// import React from 'react'
-// import { BrowserRouter, Route, Switch } from 'react-router-dom'
-// import './Login.css'
-
-// import LogUser from '../components/LogUser/LogUser.js'
-// import PasswordReset from '../components/ResetPassword/ResetPassword'
-
-// export default function App () {
-//   return (
-//     <div className="wrapper">
-//       <BrowserRouter>
-//         <Switch>
-//           <Route path="/">
-//             <LogUser />
-//           </Route>
-//           <Route path="/reset">
-//             <PasswordReset />
-//           </Route>
-//         </Switch>
-//       </BrowserRouter>
-//     </div>
-//   )
-// }
-
-// // export default function App () {
-// //   return (
-// //     <Router>
-// //       <div>
-// //         <nav>
-// //           <ul>
-// //             <li>
-// //               <Link to="/">Home</Link>
-// //             </li>
-// //             <li>
-// //               <Link to="/login2">Login</Link>
-// //             </li>
-// //             <li>
-// //               <Link to="#/reset">Reset</Link>
-// //             </li>
-// //             <li>
-// //               <Link to="#/dashboard">Dashboard</Link>
-// //             </li>
-// //           </ul>
-// //         </nav>
-
-// //         <Switch>
-// //           <Route exact path="/login2">
-// //             <Login />
-// //           </Route>
-// //           <Route exact path="#/reset">
-// //             <PasswordReset />
-// //           </Route>
-// //           <Route exact path="#/dashboard">
-// //             <Dashboard />
-// //           </Route>
-// //           <Route exact path="/">
-// //             <Home />
-// //           </Route>
-// //         </Switch>
-// //       </div>
-// //     </Router>
-// //   )
-// // }
-
-// // function Home () {
-// //   return (
-// //     <div>
-// //       <h2>Home</h2>
-// //       <SignupForm />
-// //     </div>
-// //   )
-// // }
-// // function PasswordReset () {
-// //   return (
-// //     <div>
-// //       <h2>Password Reset</h2>
-// //       <PasswordResetForm />
-// //     </div>
-// //   )
-// // }
-
-// // function Dashboard () {
-// //   return <h2>Dashboard</h2>
-// // }
