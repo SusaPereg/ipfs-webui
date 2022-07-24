@@ -14,6 +14,8 @@ import InfoBoxes from './info-boxes/InfoBoxes'
 import FilePreview from './file-preview/FilePreview'
 import FilesList from './files-list/FilesList'
 import { getJoyrideLocales } from '../helpers/i8n'
+// firebase
+import { getAuth } from 'firebase/auth'
 
 // Icons
 import Modals, { DELETE, NEW_FOLDER, SHARE, RENAME, ADD_BY_PATH, CLI_TUTOR_MODE, PINNING } from './modals/Modals'
