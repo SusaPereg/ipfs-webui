@@ -27,6 +27,8 @@ const FilesPage = ({
   files, filesPathInfo, pinningServices, toursEnabled, handleJoyrideCallback, isCliTutorModeEnabled, cliOptions, t
 }) => {
   const contextMenuRef = useRef()
+  const auth = getAuth()
+  const user = auth.currentUser
   const [downloadAbort, setDownloadAbort] = useState(null)
   const [downloadProgress, setDownloadProgress] = useState(null)
   const [modals, setModals] = useState({ show: null, files: null })
@@ -56,6 +58,11 @@ const FilesPage = ({
     files && files.content && doFetchRemotePins(files.content)
   }, [files, pinningServices, doFetchRemotePins])
   */
+  if (user) {
+    console.log('Logged in')
+  } else {
+    console.log('Not logged in')
+  }
 
   const onDownload = async (files) => {
     if (downloadProgress !== null) {

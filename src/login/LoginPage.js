@@ -17,6 +17,7 @@ const LoginPage = ({ t }) => {
       signInWithEmailAndPassword(auth, email, password).catch((error) =>
         console.log(error)
       )
+      console.log('Successfull login')
     }
     onRegister()
   }
