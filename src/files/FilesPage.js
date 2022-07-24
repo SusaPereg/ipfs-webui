@@ -15,7 +15,7 @@ import FilePreview from './file-preview/FilePreview'
 import FilesList from './files-list/FilesList'
 import { getJoyrideLocales } from '../helpers/i8n'
 // firebase
-import { auth } from '../login/base'
+// import { auth } from '../login/base'
 // import { getAuth } from 'firebase/auth'
 
 // Icons
@@ -30,7 +30,7 @@ const FilesPage = ({
   files, filesPathInfo, pinningServices, toursEnabled, handleJoyrideCallback, isCliTutorModeEnabled, cliOptions, t
 }) => {
   const contextMenuRef = useRef()
-  const user = auth.currentUser
+  // const user = auth.currentUser
   const [downloadAbort, setDownloadAbort] = useState(null)
   const [downloadProgress, setDownloadProgress] = useState(null)
   const [modals, setModals] = useState({ show: null, files: null })
@@ -60,12 +60,6 @@ const FilesPage = ({
     files && files.content && doFetchRemotePins(files.content)
   }, [files, pinningServices, doFetchRemotePins])
   */
-  if (user) {
-    console.log('Logged in')
-  } else {
-    console.log('Not logged in')
-  }
-
   const onDownload = async (files) => {
     if (downloadProgress !== null) {
       return downloadAbort()

@@ -1,4 +1,6 @@
 import { createSelector } from 'redux-bundler'
+// firebase
+import { auth } from '../login/base'
 
 const redirectsBundle = {
   name: 'redirects',
@@ -16,8 +18,16 @@ const redirectsBundle = {
     'selectIpfsInitFailed',
     'selectHash',
     (failed, hash) => {
-      if (failed && hash !== '/welcome' && !hash.startsWith('/settings') && !hash.startsWith('/login')) {
+      const user = auth.currentUser
+      console.log(user)
+      if ((failed && hash !== '/welcome' && !hash.startsWith('/settings') && !hash.startsWith('/login'))) {
         return { actionCreator: 'doUpdateHash', args: ['#/welcome'] }
+      }
+      if (user) {
+        if ((user.displayName == null && !failed)) {
+          console.log(user)
+          return { actionCreator: 'doUpdateHash', args: ['#/login'] }
+        }
       }
     }
   )
