@@ -18,8 +18,6 @@ import Notify from './components/notify/Notify'
 import Connected from './components/connected/Connected'
 import TourHelper from './components/tour/TourHelper'
 import FilesExploreForm from './files/explore-form/FilesExploreForm'
-// firebase
-import { AuthContext } from './login/AuthProvider'
 
 export class App extends Component {
   static propTypes = {
@@ -32,8 +30,6 @@ export class App extends Component {
     // Injected by DropTarget
     isOver: PropTypes.bool.isRequired
   }
-
-  static contextType = AuthContext
 
   componentDidMount () {
     this.props.doTryInitIpfs()
@@ -59,7 +55,6 @@ export class App extends Component {
   }
 
   render () {
-    const currentUser = this.context
     const { t, route: Page, ipfsReady, doFilesNavigateTo, doExploreUserProvidedPath, routeInfo: { url }, connectDropTarget, canDrop, isOver, showTooltip } = this.props
     return connectDropTarget(
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -78,7 +73,7 @@ export class App extends Component {
               </div>
             </div>
             <main className='bg-white pv3 pa3 pa4-l'>
-              { ((ipfsReady && currentUser) || url === '/welcome' || url.startsWith('/login') || url.startsWith('/settings'))
+              { (ipfsReady || url === '/welcome' || url.startsWith('/login') || url.startsWith('/settings'))
                 ? <Page />
                 : <ComponentLoader />
               }

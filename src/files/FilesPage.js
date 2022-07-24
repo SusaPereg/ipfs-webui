@@ -15,7 +15,8 @@ import FilePreview from './file-preview/FilePreview'
 import FilesList from './files-list/FilesList'
 import { getJoyrideLocales } from '../helpers/i8n'
 // firebase
-import { getAuth } from 'firebase/auth'
+import { auth } from '../login/base'
+// import { getAuth } from 'firebase/auth'
 
 // Icons
 import Modals, { DELETE, NEW_FOLDER, SHARE, RENAME, ADD_BY_PATH, CLI_TUTOR_MODE, PINNING } from './modals/Modals'
@@ -29,7 +30,6 @@ const FilesPage = ({
   files, filesPathInfo, pinningServices, toursEnabled, handleJoyrideCallback, isCliTutorModeEnabled, cliOptions, t
 }) => {
   const contextMenuRef = useRef()
-  const auth = getAuth()
   const user = auth.currentUser
   const [downloadAbort, setDownloadAbort] = useState(null)
   const [downloadProgress, setDownloadProgress] = useState(null)
