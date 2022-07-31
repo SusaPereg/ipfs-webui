@@ -1,5 +1,4 @@
 /* eslint-disable require-yield */
-
 import { join, dirname, basename } from 'path'
 import { getDownloadLink, getShareableLink } from '../../lib/files'
 import countDirs from '../../lib/count-dirs'
@@ -8,6 +7,7 @@ import all from 'it-all'
 import map from 'it-map'
 import last from 'it-last'
 import CID from 'cids'
+import { auth } from '../../login/base'
 
 import { spawn, perform, send, ensureMFS, Channel, sortFiles, infoFromPath } from './utils'
 import { IGNORED_FILES, ACTIONS } from './consts'
@@ -297,7 +297,14 @@ const actions = () => ({
       const numberOfFiles = files.length
       const numberOfDirs = countDirs(files)
       const expectedResponseCount = numberOfFiles + numberOfDirs
-
+      const currentUser = auth.currentUser
+      for (const { path, cid } of added) {
+        const hash = cid.toString()
+        console.log(path)
+        console.log(hash)
+        console.log(currentUser.uid)
+        console.log(currentUser.email)
+      }
       if (added.length !== expectedResponseCount) {
         // See https://github.com/ipfs/js-ipfs-api/issues/797
         throw Object.assign(new Error('API returned a partial response.'), {
@@ -359,7 +366,13 @@ const actions = () => ({
           recursive: true
         }))
       )
-
+      const currentUser = auth.currentUser
+      for (const file of files) {
+        console.log(file.name)
+        console.log(file.cid)
+        console.log(currentUser.uid)
+        console.log(currentUser.email)
+      }
       // Pin cleanup only if MFS removal was successful
       if (removeRemotely) {
         // remote unpin can be slow, so we do this async in best-effort fashion
