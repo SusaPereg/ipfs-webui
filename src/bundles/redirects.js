@@ -18,11 +18,11 @@ const redirectsBundle = {
     'selectHash',
     (failed, hash) => {
       const currentUser = auth.currentUser
-      if (failed && hash !== '/welcome' && !hash.startsWith('/settings') && !hash.startsWith('/login')) {
-        return { actionCreator: 'doUpdateHash', args: ['#/welcome'] }
-      }
       if (!failed && hash.startsWith('/files') && !currentUser) {
         return { actionCreator: 'doUpdateHash', args: ['#/login'] }
+      }
+      if (failed && hash !== '/welcome' && !hash.startsWith('/settings') && !hash.startsWith('/login')) {
+        return { actionCreator: 'doUpdateHash', args: ['#/welcome'] }
       }
     }
   )
