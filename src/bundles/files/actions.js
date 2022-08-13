@@ -369,7 +369,7 @@ const actions = () => ({
       const currentUser = auth.currentUser
       for (const file of files) {
         console.log(file.name)
-        console.log(file.cid)
+        console.log(file.cid.toString())
         console.log(currentUser.uid)
         console.log(currentUser.email)
       }
@@ -467,6 +467,13 @@ const actions = () => ({
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser
+    const hash = ipfs.files.stat(realMfsPath(dst))
+    const cid = (await hash).cid.toString() // UPDATE METADATA
+    console.log(dst)
+    console.log(cid)
+    console.log(currentUser.uid)
+    console.log(currentUser.email)
   }),
 
   /**
@@ -479,10 +486,17 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      await ipfs.files.cp(realMfsPath(src), realMfsPath(dst)) // UPDATE METADATA
+      await ipfs.files.cp(realMfsPath(src), realMfsPath(dst)) // ADD METADATA
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser
+    const hash = ipfs.files.stat(realMfsPath(dst))
+    const cid = (await hash).cid.toString()
+    console.log(dst)
+    console.log(cid)
+    console.log(currentUser.uid)
+    console.log(currentUser.email)
   }),
 
   /**
@@ -494,12 +508,19 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      await ipfs.files.mkdir(realMfsPath(path), { // UPDATE METADATA
+      await ipfs.files.mkdir(realMfsPath(path), { // ADD METADATA
         parents: true
       })
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser
+    const hash = ipfs.files.stat(realMfsPath(path))
+    const cid = (await hash).cid.toString()
+    console.log(path)
+    console.log(cid)
+    console.log(currentUser.uid)
+    console.log(currentUser.email)
   }),
 
   /**
