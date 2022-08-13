@@ -454,6 +454,12 @@ const actions = () => ({
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser
+      const hash = ipfs.files.stat
+      console.log(dst)
+      console.log(hash.toString())
+      console.log(currentUser.uid)
+      console.log(currentUser.email)
   }),
 
   /**
@@ -470,6 +476,12 @@ const actions = () => ({
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser //SERIA ADD
+    const hash = ipfs.files.stat(dst)
+    console.log(dst)
+    console.log(hash.toString())
+    console.log(currentUser.uid)
+    console.log(currentUser.email)
   }),
 
   /**
@@ -481,12 +493,18 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      await ipfs.files.mkdir(realMfsPath(path), { // UPDATE METADATA
+      await ipfs.files.mkdir(realMfsPath(path), { 
         parents: true
       })
     } finally {
       await store.doFilesFetch()
     }
+    const currentUser = auth.currentUser //SERIA ADD DIRECTORY
+    const hash = ipfs.files.stat(path)
+    console.log(path)
+    console.log(hash.toString())
+    console.log(currentUser.uid)
+    console.log(currentUser.email)
   }),
 
   /**
