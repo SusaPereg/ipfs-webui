@@ -352,16 +352,17 @@ const actions = () => ({
     ensureMFS(store)
 
     if (files.length === 0) return undefined
-    try {
-      for (const file of files) {
-        console.log(file.name)
-        const cid = file.cid.toString()
-        console.log(cid)
-        deleteFiles(cid)
-      }
-    } catch (err) {
-      console.log('Cannot delete files')
-      return undefined
+    for (const file of files) {
+      console.log(file.name)
+      const cid = file.cid.toString()
+      console.log(cid)
+      deleteFiles(cid).then((e) => {
+        console.log(e)
+        if (e === 'error') {
+          console.log('if')
+          return undefined
+        }
+      })
     }
     console.log('QUE SIGOO')
     /**
@@ -374,11 +375,12 @@ const actions = () => ({
 
     try {
       // try removing from MFS first
-      await Promise.all(
-        files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
-          recursive: true
-        }))
-      )
+      console.log('QUE SIGOOMFS')
+      // await Promise.all(
+      //   files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
+      //     recursive: true
+      //   }))
+      // )
       // Pin cleanup only if MFS removal was successful
       if (removeRemotely) {
         // remote unpin can be slow, so we do this async in best-effort fashion
@@ -400,6 +402,7 @@ const actions = () => ({
 
       return undefined
     } finally {
+      console.log('finally')
       await store.doFilesFetch()
     }
   }),

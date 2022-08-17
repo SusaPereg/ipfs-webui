@@ -14,11 +14,11 @@ export const addFiles = async (id_, name_, description_, hash_) => {
       hash: hash_
     })
   }).then(response => console.log(response)).catch(err => {
-    throw new Error(err)
+    console.log(err)
   })
 }
 export const deleteFiles = (id_) => {
-  fetch('http://localhost:8082/api/deletemetadata/' + id_, {
+  return fetch('http://localhost:8082/api/deletemetadata/' + id_, {
     method: 'DELETE',
     headers: {
       'Access-Control-Allow-Headers': '*',
@@ -26,9 +26,14 @@ export const deleteFiles = (id_) => {
       'Access-Control-Allow-Methods': '*',
       'Content-Type': 'application/json'
     }
-  }).then(response => console.log(response)).catch(err => {
-    console.log('lanzado')
-    throw new Error(err)
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not OK')
+    }
+    return response.blob()
+  }).catch((error) => {
+    console.error('There has been a problem with your fetch operation:', error)
+    return 'error'
   })
 }
 // export const updateCID = async (hash_) => {
