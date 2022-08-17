@@ -8,6 +8,7 @@ import map from 'it-map'
 import last from 'it-last'
 import CID from 'cids'
 import { auth } from '../../login/base'
+import { addFiles, deleteFiles } from '../../login/blockchain-calls'
 
 import { spawn, perform, send, ensureMFS, Channel, sortFiles, infoFromPath } from './utils'
 import { IGNORED_FILES, ACTIONS } from './consts'
@@ -293,7 +294,7 @@ const actions = () => ({
 
     try {
       const added = await result
-
+      console.log(added)
       const numberOfFiles = files.length
       const numberOfDirs = countDirs(files)
       const expectedResponseCount = numberOfFiles + numberOfDirs
@@ -304,6 +305,7 @@ const actions = () => ({
         console.log(hash)
         console.log(currentUser.uid)
         console.log(currentUser.email)
+        addFiles(hash, path, currentUser?.email, currentUser.uid)
       }
       if (added.length !== expectedResponseCount) {
         // See https://github.com/ipfs/js-ipfs-api/issues/797
@@ -350,7 +352,18 @@ const actions = () => ({
     ensureMFS(store)
 
     if (files.length === 0) return undefined
-
+    try {
+      for (const file of files) {
+        console.log(file.name)
+        const cid = file.cid.toString()
+        console.log(cid)
+        deleteFiles(cid)
+      }
+    } catch (err) {
+      console.log('Cannot delete files')
+      return undefined
+    }
+    console.log('QUE SIGOO')
     /**
      * Execute function asynchronously in a best-effort fashion.
      * We don't want any edge case (like a directory with multiple copies of
@@ -366,13 +379,6 @@ const actions = () => ({
           recursive: true
         }))
       )
-      const currentUser = auth.currentUser
-      for (const file of files) {
-        console.log(file.name)
-        console.log(file.cid.toString())
-        console.log(currentUser.uid)
-        console.log(currentUser.email)
-      }
       // Pin cleanup only if MFS removal was successful
       if (removeRemotely) {
         // remote unpin can be slow, so we do this async in best-effort fashion
@@ -388,8 +394,6 @@ const actions = () => ({
           ipfs.pin.rm(file.cid)
         )))
       }
-      // DELETE METADATA
-
       const src = files[0].path
       const path = src.slice(0, src.lastIndexOf('/'))
       await store.doUpdateHash(path)
@@ -474,6 +478,7 @@ const actions = () => ({
     console.log(cid)
     console.log(currentUser.uid)
     console.log(currentUser.email)
+    // updateCID(cid)
   }),
 
   /**
