@@ -280,19 +280,18 @@ const actions = () => ({
 
     /** @type {null|{uploaded:number, offset:number, name:string}} */
     let status = null
-
-    for await (const { name, offset } of progress) {
-      status = status == null
-        ? { uploaded: 0, offset, name }
-        : name === status.name
-          ? { uploaded: status.uploaded, offset, name }
-          : { uploaded: status.uploaded + status.offset, offset, name }
-      const progress = (status.uploaded + status.offset) / totalSize * 100
-
-      yield { entries, progress }
-    }
-
     try {
+      for await (const { name, offset } of progress) {
+        status = status == null
+          ? { uploaded: 0, offset, name }
+          : name === status.name
+            ? { uploaded: status.uploaded, offset, name }
+            : { uploaded: status.uploaded + status.offset, offset, name }
+        const progress = (status.uploaded + status.offset) / totalSize * 100
+
+        yield { entries, progress }
+      }
+
       const added = await result
       console.log(added)
       const numberOfFiles = files.length
@@ -305,7 +304,13 @@ const actions = () => ({
         console.log(hash)
         console.log(currentUser.uid)
         console.log(currentUser.email)
-        addFiles(hash, path, currentUser?.email, currentUser.uid)
+        addFiles(hash, path, currentUser?.email, currentUser.uid).then((e) => {
+          console.log(e)
+          if (e === 'error') {
+            console.log('if')
+            return undefined
+          }
+        })
       }
       if (added.length !== expectedResponseCount) {
         // See https://github.com/ipfs/js-ipfs-api/issues/797
@@ -352,19 +357,6 @@ const actions = () => ({
     ensureMFS(store)
 
     if (files.length === 0) return undefined
-    for (const file of files) {
-      console.log(file.name)
-      const cid = file.cid.toString()
-      console.log(cid)
-      deleteFiles(cid).then((e) => {
-        console.log(e)
-        if (e === 'error') {
-          console.log('if')
-          return undefined
-        }
-      })
-    }
-    console.log('QUE SIGOO')
     /**
      * Execute function asynchronously in a best-effort fashion.
      * We don't want any edge case (like a directory with multiple copies of
@@ -374,33 +366,49 @@ const actions = () => ({
     const tryAsync = async fn => { try { await fn() } catch (_) {} }
 
     try {
+      for (const file of files) {
+        console.log(file.name)
+        const cid = file.cid.toString()
+        console.log(cid)
+        const seguir = await deleteFiles(cid).then((e) => {
+          console.log(e)
+          if (e === 'error') {
+            console.log('if')
+            throw Error('FETCH NOT RIGHT')
+          }
+        }).catch(error => {
+          console.log(error)
+          return 'error'
+        })
+        console.log(seguir)
+        if (seguir !== 'error') {
+          await Promise.all(
+            files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
+              recursive: true
+            }))
+          )
+          // Pin cleanup only if MFS removal was successful
+          if (removeRemotely) {
+            // remote unpin can be slow, so we do this async in best-effort fashion
+            files.forEach(file => remoteServices.map(async service => tryAsync(() =>
+              ipfs.pin.remote.rm({ cid: [file.cid], service })
+            )))
+          }
+          if (removeLocally) {
+            // removal of local pin can fail if same CID is present twice,
+            // this is done in best-effort as well
+            await Promise.all(files.map(async file => file.pinned && tryAsync(() =>
+              ipfs.pin.rm(file.cid)
+            )))
+          }
+          const src = files[0].path
+          const path = src.slice(0, src.lastIndexOf('/'))
+          await store.doUpdateHash(path)
+
+          return undefined
+        }
+      }
       // try removing from MFS first
-      console.log('QUE SIGOOMFS')
-      // await Promise.all(
-      //   files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
-      //     recursive: true
-      //   }))
-      // )
-      // Pin cleanup only if MFS removal was successful
-      if (removeRemotely) {
-        // remote unpin can be slow, so we do this async in best-effort fashion
-        files.forEach(file => remoteServices.map(async service => tryAsync(() =>
-          ipfs.pin.remote.rm({ cid: [file.cid], service })
-        )))
-      }
-
-      if (removeLocally) {
-        // removal of local pin can fail if same CID is present twice,
-        // this is done in best-effort as well
-        await Promise.all(files.map(async file => file.pinned && tryAsync(() =>
-          ipfs.pin.rm(file.cid)
-        )))
-      }
-      const src = files[0].path
-      const path = src.slice(0, src.lastIndexOf('/'))
-      await store.doUpdateHash(path)
-
-      return undefined
     } finally {
       console.log('finally')
       await store.doFilesFetch()

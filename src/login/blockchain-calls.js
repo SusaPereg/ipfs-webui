@@ -1,5 +1,5 @@
-export const addFiles = async (id_, name_, description_, hash_) => {
-  fetch('http://localhost:8082/api/addMetadata', {
+export const addFiles = (id_, name_, description_, hash_) => {
+  return fetch('http://localhost:8082/api/addMetadata', {
     method: 'POST',
     headers: {
       'Access-Control-Allow-Headers': '*',
@@ -13,11 +13,17 @@ export const addFiles = async (id_, name_, description_, hash_) => {
       descripcion: description_,
       hash: hash_
     })
-  }).then(response => console.log(response)).catch(err => {
-    console.log(err)
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not OK')
+    }
+    return response.blob()
+  }).catch((error) => {
+    console.error('There has been a problem with your fetch operation:', error)
+    return 'error'
   })
 }
-export const deleteFiles = (id_) => {
+export const deleteFiles = async (id_) => {
   return fetch('http://localhost:8082/api/deletemetadata/' + id_, {
     method: 'DELETE',
     headers: {
