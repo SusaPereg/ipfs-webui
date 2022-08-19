@@ -299,42 +299,58 @@ const actions = () => ({
       const expectedResponseCount = numberOfFiles + numberOfDirs
       const currentUser = auth.currentUser
       for (const { path, cid } of added) {
+        console.log(added)
         const hash = cid.toString()
         console.log(path)
         console.log(hash)
         console.log(currentUser.uid)
         console.log(currentUser.email)
-        addFiles(hash, path, currentUser?.email, currentUser.uid).then((e) => {
+        const seguir = await addFiles(hash, path, currentUser?.email, currentUser.uid).then((e) => {
           console.log(e)
           if (e === 'error') {
             console.log('if')
-            return undefined
+            return 'error'
           }
         })
+        console.log(seguir)
+        if (seguir === 'error') {
+          console.log('entro aqui')
+          const src = path
+          const src2 = root.toString() + '/'
+          const src3 = root.toString() + '/' + path
+          console.log(src)
+          console.log('soruce ' + src2)
+          const mfsPath = src2 + path
+          console.log(realMfsPath(src))
+          console.log('soruce ' + realMfsPath(src2))
+          console.log('realPath: ' + mfsPath)
+          console.log('SRC3: ' + src3)
+          console.log('REALPATHSRC3: ' + realMfsPath(src3))
+          await ipfs.files.rm(realMfsPath(src3), { recursive: true })
+          console.log('salgo')
+        } else {
+          if (path.indexOf('/') === -1 && path !== '') {
+            const src = `/ipfs/${cid}`
+            const dst = join(realMfsPath(root || '/files'), path)
+
+            try {
+              await ipfs.files.cp(src, dst)
+            } catch (err) {
+              // TODO: Not sure why we do this. Perhaps a generic error is used
+              // to avoid leaking private information via Countly?
+              throw Object.assign(new Error('ipfs.files.cp call failed'), {
+                code: 'ERR_FILES_CP_FAILED'
+              })
+            }
+          }
+        }
       }
+
       if (added.length !== expectedResponseCount) {
         // See https://github.com/ipfs/js-ipfs-api/issues/797
         throw Object.assign(new Error('API returned a partial response.'), {
           code: 'ERR_API_RESPONSE'
         })
-      }
-
-      for (const { path, cid } of added) {
-        // Only go for direct children
-        if (path.indexOf('/') === -1 && path !== '') {
-          const src = `/ipfs/${cid}`
-          const dst = join(realMfsPath(root || '/files'), path)
-
-          try {
-            await ipfs.files.cp(src, dst)
-          } catch (err) {
-            // TODO: Not sure why we do this. Perhaps a generic error is used
-            // to avoid leaking private information via Countly?
-            throw Object.assign(new Error('ipfs.files.cp call failed'), {
-              code: 'ERR_FILES_CP_FAILED'
-            })
-          }
-        }
       }
 
       yield { entries, progress: 100 }
@@ -364,12 +380,12 @@ const actions = () => ({
      * @param {Function} fn
      */
     const tryAsync = async fn => { try { await fn() } catch (_) {} }
-
     try {
       for (const file of files) {
         console.log(file.name)
         const cid = file.cid.toString()
         console.log(cid)
+        console.log('PATH: ' + realMfsPath(file.path))
         const seguir = await deleteFiles(cid).then((e) => {
           console.log(e)
           if (e === 'error') {
@@ -472,6 +488,8 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
+      console.log(src)
+      console.log(realMfsPath(src))
       await ipfs.files.mv(realMfsPath(src), realMfsPath(dst))
 
       const page = store.selectFiles()

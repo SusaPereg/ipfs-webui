@@ -1,4 +1,4 @@
-export const addFiles = (id_, name_, description_, hash_) => {
+export const addFiles = async (id_, name_, description_, hash_) => {
   return fetch('http://localhost:8082/api/addMetadata', {
     method: 'POST',
     headers: {
