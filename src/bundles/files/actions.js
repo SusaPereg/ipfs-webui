@@ -293,41 +293,24 @@ const actions = () => ({
       }
 
       const added = await result
-      console.log(added)
       const numberOfFiles = files.length
       const numberOfDirs = countDirs(files)
       const expectedResponseCount = numberOfFiles + numberOfDirs
       const currentUser = auth.currentUser
+      const user = currentUser?.email.split('@')[0]
       for (const { path, cid } of added) {
-        console.log(added)
         const hash = cid.toString()
         console.log(path)
         console.log(hash)
-        console.log(currentUser.uid)
-        console.log(currentUser.email)
-        const seguir = await addFiles(hash, path, currentUser?.email, currentUser.uid).then((e) => {
+        const seguir = await addFiles(hash, path, user).then((e) => {
           console.log(e)
           if (e === 'error') {
-            console.log('if')
             return 'error'
           }
         })
-        console.log(seguir)
         if (seguir === 'error') {
-          console.log('entro aqui')
-          const src = path
-          const src2 = root.toString() + '/'
-          const src3 = root.toString() + '/' + path
-          console.log(src)
-          console.log('soruce ' + src2)
-          const mfsPath = src2 + path
-          console.log(realMfsPath(src))
-          console.log('soruce ' + realMfsPath(src2))
-          console.log('realPath: ' + mfsPath)
-          console.log('SRC3: ' + src3)
-          console.log('REALPATHSRC3: ' + realMfsPath(src3))
-          await ipfs.files.rm(realMfsPath(src3), { recursive: true })
-          console.log('salgo')
+          const src = root.toString() + '/' + path
+          await ipfs.files.rm(realMfsPath(src), { recursive: true })
         } else {
           if (path.indexOf('/') === -1 && path !== '') {
             const src = `/ipfs/${cid}`
@@ -382,14 +365,14 @@ const actions = () => ({
     const tryAsync = async fn => { try { await fn() } catch (_) {} }
     try {
       for (const file of files) {
-        console.log(file.name)
         const cid = file.cid.toString()
         console.log(cid)
         console.log('PATH: ' + realMfsPath(file.path))
-        const seguir = await deleteFiles(cid).then((e) => {
+        const currentUser = auth.currentUser
+        const user = currentUser?.email.split('@')[0]
+        const seguir = await deleteFiles(cid, user).then((e) => {
           console.log(e)
           if (e === 'error') {
-            console.log('if')
             throw Error('FETCH NOT RIGHT')
           }
         }).catch(error => {
@@ -440,7 +423,7 @@ const actions = () => ({
    */
   doFilesAddPath: (root, src, name = '') => perform(ACTIONS.ADD_BY_PATH, async (ipfs, { store }) => {
     ensureMFS(store)
-
+    console.log('entro en la nueva')
     const path = realMfsPath(src)
     const cid = /** @type {string} */(path.split('/').pop())
 
@@ -488,8 +471,14 @@ const actions = () => ({
     ensureMFS(store)
 
     try {
-      console.log(src)
-      console.log(realMfsPath(src))
+      // const str = dst.substring(0, dst.lastIndexOf('/'))
+      // console.log('SUBSTRING: ' + str)
+      // console.log(str)
+      // console.log(realMfsPath(str))
+      // console.log()
+      // const hash3 = ipfs.files.stat(realMfsPath(str))
+      // const cid3 = (await hash3).cid.toString() // UPDATE METADATA
+      // console.log(cid3)
       await ipfs.files.mv(realMfsPath(src), realMfsPath(dst))
 
       const page = store.selectFiles()
@@ -497,17 +486,20 @@ const actions = () => ({
       if (src === pagePath) {
         await store.doUpdateHash(dst)
       }
+      // const str2 = dst.substring(0, dst.lastIndexOf('/'))
+      // console.log('SUBSTRING: ' + str2)
+      // const name = dst.split('/').pop() // => "Tabs1"
+      // const currentUser = auth.currentUser
+      // const hash = ipfs.files.stat(realMfsPath(str2))
+      // const cid = (await hash).cid.toString() // UPDATE METADATA
+      // console.log(currentUser.uid)
+      // console.log(currentUser.email)
+      // console.log(' Antiguo ' + cid3)
+      // console.log('Nuevo ' + cid)
+      // updateCID(cid3, name, currentUser?.email, cid)
     } finally {
       await store.doFilesFetch()
     }
-    const currentUser = auth.currentUser
-    const hash = ipfs.files.stat(realMfsPath(dst))
-    const cid = (await hash).cid.toString() // UPDATE METADATA
-    console.log(dst)
-    console.log(cid)
-    console.log(currentUser.uid)
-    console.log(currentUser.email)
-    // updateCID(cid)
   }),
 
   /**
@@ -524,13 +516,13 @@ const actions = () => ({
     } finally {
       await store.doFilesFetch()
     }
-    const currentUser = auth.currentUser
-    const hash = ipfs.files.stat(realMfsPath(dst))
-    const cid = (await hash).cid.toString()
-    console.log(dst)
-    console.log(cid)
-    console.log(currentUser.uid)
-    console.log(currentUser.email)
+    // const currentUser = auth.currentUser
+    // const hash = ipfs.files.stat(realMfsPath(dst))
+    // const cid = (await hash).cid.toString()
+    // console.log(dst)
+    // console.log(cid)
+    // console.log(currentUser.uid)
+    // console.log(currentUser.email)
   }),
 
   /**
@@ -548,13 +540,13 @@ const actions = () => ({
     } finally {
       await store.doFilesFetch()
     }
-    const currentUser = auth.currentUser
-    const hash = ipfs.files.stat(realMfsPath(path))
-    const cid = (await hash).cid.toString()
-    console.log(path)
-    console.log(cid)
-    console.log(currentUser.uid)
-    console.log(currentUser.email)
+    // const currentUser = auth.currentUser
+    // const hash = ipfs.files.stat(realMfsPath(path))
+    // const cid = (await hash).cid.toString()
+    // console.log(path)
+    // console.log(cid)
+    // console.log(currentUser.uid)
+    // console.log(currentUser.email)
   }),
 
   /**

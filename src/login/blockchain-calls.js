@@ -1,4 +1,4 @@
-export const addFiles = async (id_, name_, description_, hash_) => {
+export const addFiles = async (id_, name_, user_) => {
   return fetch('http://localhost:8082/api/addMetadata', {
     method: 'POST',
     headers: {
@@ -10,8 +10,7 @@ export const addFiles = async (id_, name_, description_, hash_) => {
     body: JSON.stringify({
       id: id_,
       name: name_,
-      descripcion: description_,
-      hash: hash_
+      user: user_
     })
   }).then(response => {
     if (!response.ok) {
@@ -23,7 +22,7 @@ export const addFiles = async (id_, name_, description_, hash_) => {
     return 'error'
   })
 }
-export const deleteFiles = async (id_) => {
+export const deleteFiles = async (id_, user_) => {
   return fetch('http://localhost:8082/api/deletemetadata/' + id_, {
     method: 'DELETE',
     headers: {
@@ -31,7 +30,11 @@ export const deleteFiles = async (id_) => {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',
       'Content-Type': 'application/json'
-    }
+    },
+    body: JSON.stringify({
+      id: id_,
+      user: user_
+    })
   }).then(response => {
     if (!response.ok) {
       throw new Error('Network response was not OK')
@@ -42,19 +45,28 @@ export const deleteFiles = async (id_) => {
     return 'error'
   })
 }
-// export const updateCID = async (hash_) => {
-//   fetch('http://localhost:8082/api/deletemetada/' + id_, {
-//     method: 'GET',
-//     headers: {
-//       'Access-Control-Allow-Headers': '*',
-//       'Access-Control-Allow-Origin': '*',
-//       'Access-Control-Allow-Methods': '*',
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       parameterFour: hash_
-//     })
-//   }).then(response => console.log(response)).catch(err => {
-//     throw new Error(err)
-//   })
-// }
+export const updateCID = async (id_, name_, user_, newid_) => {
+  fetch('http://localhost:8082/api/updateMetadata/', {
+    method: 'PUT',
+    headers: {
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: id_,
+      name: name_,
+      user: user_,
+      newid: newid_
+    })
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not OK')
+    }
+    return response.blob()
+  }).catch((error) => {
+    console.error('There has been a problem with your fetch operation:', error)
+    return 'error'
+  })
+}
