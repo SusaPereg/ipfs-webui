@@ -3,10 +3,12 @@ import { Helmet } from 'react-helmet'
 import { connect } from 'redux-bundler-react'
 import { withTranslation } from 'react-i18next'
 import withTour from '../components/tour/withTour'
-import Box from '../components/box/Box'
+// import Box from '../components/box/Box'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth } from './base'
+import './LoginPage.css'
 import { AuthContext } from '../login/AuthProvider'
+import logo from './src/UCA-Simbolo.png'
 
 const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
@@ -23,6 +25,7 @@ const LoginPage = ({ t }) => {
     }
     onRegister()
   }
+
   const clickLogOut = () => {
     if (currentUser) {
       signOut(auth)
@@ -36,7 +39,7 @@ const LoginPage = ({ t }) => {
       <Helmet>
         <title>{t('title')} | IPFS</title>
       </Helmet>
-      <Box className='mb3 pa4-l pa2'>
+      {/* <Box className='mb3 pa4-l pa2'>
         <div className='lh-copy charcoal'>
           <form className="loginForm" onSubmit={handleSubmit}>
             <input
@@ -50,10 +53,31 @@ const LoginPage = ({ t }) => {
               onChange={(e) => setPassword(e.target.value)}
             ></input>
             <button>Login</button>
+            <button onClick={clickLogOut}>Log Out</button>
           </form>
-          <button onClick={clickLogOut}>Log Out</button>
         </div>
-      </Box>
+      </Box> */}
+      <img src={logo} className="logo" alt="UCA" width="210px" alignment="center"/>
+      <form className="LoginPage" onSubmit={handleSubmit}>
+        <div className="input-group">
+          <label htmlFor="email">Email</label>
+          <input
+            placeholder="Email"
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+          ></input>
+        </div>
+        <div className="input-group">
+          <label htmlFor="password">Password</label>
+          <input
+            placeholder="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          ></input>
+        </div>
+        <button className="primary">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button>
+      </form>
+
     </div>
   )
 }

@@ -379,7 +379,6 @@ const actions = () => ({
           console.log(error)
           return 'error'
         })
-        console.log(seguir)
         if (seguir !== 'error') {
           await Promise.all(
             files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
@@ -409,7 +408,6 @@ const actions = () => ({
       }
       // try removing from MFS first
     } finally {
-      console.log('finally')
       await store.doFilesFetch()
     }
   }),
