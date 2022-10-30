@@ -27,6 +27,6 @@ export default createRouteBundle({
   '/status*': StatusPage,
   '/': StatusPage,
   '': StatusPage,
-  '/reset': resetPage,
+  '/reset*': resetPage,
   '/login*': LoginPage
 }, { routeInfoSelector: 'selectHash' })

@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet'
 import { withTranslation } from 'react-i18next'
 import Title from './Title'
 import Box from '../components/box/Box'
-import ResetToggle from '../components/ResetPass/ResetToggle'
 
 export const ResetPassword = ({ t }) => (
   <div data-id='PasswordReset' className='mw9 center'>
@@ -12,10 +11,10 @@ export const ResetPassword = ({ t }) => (
     </Helmet>
 
     <Box>
-      <Title>{t('reset')}</Title>
-      <ResetToggle t={t} open />
+      <Title>{t('Reset Password')}</Title>
+
     </Box>
   </div>
 )
 
-export default withTranslation('login')(ResetPassword)
+export default withTranslation('reset')(ResetPassword)
