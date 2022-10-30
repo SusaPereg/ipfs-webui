@@ -79,8 +79,11 @@ const LoginPage = ({ t }) => {
             type={shown ? 'text' : 'password'}
             onChange={(e) => setPassword(e.target.value)}
           ></input>
+          <span class="input-group-btn">
+            <button className="primary" onClick={switchShown}>{shown ? 'Hide' : 'Show'}</button>
+          </span>
         </div>
-        <button className="primary">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button> <button className="primary" onClick={switchShown}>{shown ? 'Hide' : 'Show'}</button>
+        <button className="primary">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button>
       </form>
       <Box>
         <Title>{t('Forgot password?')}</Title>
