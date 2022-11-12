@@ -58,11 +58,13 @@ const LoginPage = ({ t }) => {
   const switchShown = () => setShown(!shown)
 
   return (
-    <div data-id='LoginPage' className='mw9 center'>
+    <div data-id='LoginPage'>
       <Helmet>
         <title>{t('title')} | IPFS</title>
       </Helmet>
-      <img src={logo} className="logo" alt="UCA" width="210px" class="center"/> <img src={sealogo} className="logo" alt="SEA EU" width="170px" class="right"/>
+      <div id="imagenes">
+        <img src={logo} className="logo" alt="UCA" width="210px"/> <img src={sealogo} className="logo" alt="SEA EU" width="170px"/>
+      </div>
       <form className="LoginPage" onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="email">Email</label>
@@ -71,19 +73,19 @@ const LoginPage = ({ t }) => {
             type="email"
             onChange={(e) => setEmail(e.target.value)}
           ></input>
-        </div>
-        <div className="input-group">
           <label htmlFor="password">Password</label>
-          <input
-            placeholder="Password"
-            type={shown ? 'text' : 'password'}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
           <span class="input-group-btn">
-            <button className="primary" onClick={switchShown}>{shown ? 'Hide' : 'Show'}</button>
+            <input
+              placeholder="Password"
+              type={shown ? 'text' : 'password'}
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+            <button className="primary show" onClick={switchShown}>{shown ? 'Hide' : 'Show'}</button>
           </span>
+          <div id="botones_log">
+            <button className="primary login">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button>
+          </div>
         </div>
-        <button className="primary">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button>
       </form>
       <Box>
         <Title>{t('Forgot password?')}</Title>
@@ -95,8 +97,8 @@ const LoginPage = ({ t }) => {
               type="email"
               onChange={(p) => setEmail(p.target.value)}
             ></input>
+            <button className="second">Reset password</button>
           </div>
-          <button className="second">Reset password</button>
         </form>
       </Box>
     </div>

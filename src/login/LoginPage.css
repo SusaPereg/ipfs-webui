@@ -8,31 +8,40 @@ body {
 
 html, body, #root {
   min-height: 100%;
-  align-items: center;
-  justify-content: center;
-
 }
 
 .appOverlay {
   width: 100%;
+  display: flex;
 }
 .LoginPage{
   border-radius: 4px;
+  margin: auto;
   box-shadow: #f2f2f5;
   max-width: 615px;
   padding-bottom: 66px;
   padding-top: 46px;
-  text-align: center;
+  display: flexbox;
+  align-items: center;
+  flex-direction: column;
 }
 
 form.LoginPage{
-  margin-bottom: 98px;
-  margin-top: 41px;
   color: #e2dddd;
-  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: rows;
 }
-.LoginPage > .logo {
+
+#imagenes{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  margin: auto;
+}
+
+.LoginPage .logo {
   padding-top: 15px;
   -webkit-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
@@ -43,25 +52,72 @@ form.LoginPage{
   width: 20px;
 }
 .input-group {
+  max-width: max-content;
   margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
 }
 .input-group:nth-last-child(-n + 2) {
   margin-bottom: 50px;
 }
-.input-group > label,
+
+#botones_log{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.input-group-btn{
+  display: inline-flex;
+  align-items: center;
+}
+
+.input-group-btn > input::placeholder {
+  color: #c4c4c4;
+  font-size: 16px;
+}
+
+input{
+  font-family: 'Montserrat';
+  max-width: 360px;
+  text-align: left;
+  align-self: start;
+  margin-bottom: 10px;
+  margin-right: 25px;
+  background: #f2f2f5;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  color: #676767;
+  font-size: 16px;
+  height: 40px;
+  outline: 0;
+  padding: 0 15px;
+  transition: all 0.3s;
+}
+
 .input-group > input {
   font-family: 'Montserrat';
   max-width: 360px;
   text-align: left;
-  width: 80%;
+  align-self: start;
+  margin-bottom: 10px;
   margin-right: 25px;
-
 }
+
+button.show{
+  align-self: start;
+  height: 40px;
+  outline: 0;
+  padding: 0 15px;
+  min-width: 70px;
+}
+
 .input-group > label {
+  align-self: start;
   color: #676767;
   display: inline-block;
   margin-bottom: 5px;
-
 }
 .input-group > input {
   background: #f2f2f5;
@@ -73,7 +129,6 @@ form.LoginPage{
   outline: 0;
   padding: 0 15px;
   transition: all 0.3s;
-  align-items: center;
 }
 .input-group > input:focus {
   background: #f8f6f6;
@@ -97,12 +152,16 @@ form.LoginPage{
   padding: 10px 0;
   transition: 0.3s;
   width: 80%;
-  align-items: center;
   text-align: center;
 }
 button.primary {
   background: #0b3a53;
 }
+
+button.login{
+  margin-right: 10px;
+}
+
 button.primary:hover {
   background: #10557a;
 }
@@ -110,6 +169,7 @@ button.second {
   background: #0b3a53;
   max-width: 170px;
   align-items: right;
+  margin-top: 10px;
 }
 button.second:hover {
   background: #10557a;
