@@ -8,7 +8,7 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'fir
 import { auth } from './base'
 import './LoginPage.css'
 import { AuthContext } from '../login/AuthProvider'
-import logo from './src/UCA-Simbolo.png'
+import logo from './src/logo_UCA.png'
 import sealogo from './src/logo_seaeu4.png'
 import Box from '../components/box/Box'
 import Title from './Title'
@@ -63,7 +63,7 @@ const LoginPage = ({ t }) => {
         <title>{t('title')} | IPFS</title>
       </Helmet>
       <div id="imagenes">
-        <img src={logo} className="logo" alt="UCA" width="210px"/> <img src={sealogo} className="logo" alt="SEA EU" width="170px"/>
+        <img src={logo} className="logo" alt="UCA" width="300px"/> <img src={sealogo} className="logo" alt="SEA EU" width="170px"/>
       </div>
       <form className="LoginPage" onSubmit={handleSubmit}>
         <div className="input-group">
@@ -73,22 +73,22 @@ const LoginPage = ({ t }) => {
             type="email"
             onChange={(e) => setEmail(e.target.value)}
           ></input>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Contraseña</label>
           <span class="input-group-btn">
             <input
-              placeholder="Password"
+              placeholder="Contraseña"
               type={shown ? 'text' : 'password'}
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            <button className="primary show" onClick={switchShown}>{shown ? 'Hide' : 'Show'}</button>
+            <button className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
           </span>
           <div id="botones_log">
-            <button className="primary login">Login</button>  <button className="primary" onClick={clickLogOut}> Log Out</button>
+            <button className="primary login">Acceder</button>  <button className="primary" onClick={clickLogOut}> Salir</button>
           </div>
         </div>
       </form>
       <Box>
-        <Title>{t('Forgot password?')}</Title>
+        <Title>{t('¿Has olvidado tu contraseña?')}</Title>
         <form className="LoginPage" onSubmit={handleSubmitReset}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
@@ -97,7 +97,7 @@ const LoginPage = ({ t }) => {
               type="email"
               onChange={(p) => setEmail(p.target.value)}
             ></input>
-            <button className="second">Reset password</button>
+            <button className="second">Cambiar contraseña</button>
           </div>
         </form>
       </Box>
