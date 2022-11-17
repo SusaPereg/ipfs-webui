@@ -18,6 +18,7 @@ const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [shown, setShown] = React.useState(false)
   const currentUser = useContext(AuthContext)
 
@@ -26,13 +27,14 @@ const LoginPage = ({ t }) => {
     function onLog () {
       signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
         setError(' ')
+        setSuccess('Inicio de sesión realizado con éxito')
         console.log('Successful login')
       })
         .catch((error) => {
           const errorCode = error.code.toString()
           console.log(errorCode)
           if (errorCode !== ' ') {
-            setError('Incorrect email or password')
+            setError('Email o contraseña incorrecto')
           }
         })
     }
@@ -54,7 +56,7 @@ const LoginPage = ({ t }) => {
     if (currentUser.currentUser !== null) {
       signOut(auth)
     } else {
-      setError('No user connected')
+      setError('No hay ninguna sesión activa')
     }
   }
 
@@ -89,8 +91,9 @@ const LoginPage = ({ t }) => {
             <button className="primary login">Acceder</button>  <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>
           </div>
         </div>
+        {error && <div> {error} </div>}
+        {success && <div>{success}</div>}
       </form>
-      {error && <div>{error}</div>}
       <Box>
         <Title>{t('¿Has olvidado tu contraseña?')}</Title>
         <form className="LoginPage" onSubmit={handleSubmitReset}>
