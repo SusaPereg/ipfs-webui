@@ -17,18 +17,26 @@ import Title from './Title'
 const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const [shown, setShown] = React.useState(false)
   const currentUser = useContext(AuthContext)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    function onRegister () {
-      signInWithEmailAndPassword(auth, email, password).catch((error) =>
-        console.log(error)
-      )
-      console.log('Successful login')
+    function onLog () {
+      signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        setError(' ')
+        console.log('Successful login')
+      })
+        .catch((error) => {
+          const errorCode = error.code.toString()
+          console.log(errorCode)
+          if (errorCode !== ' ') {
+            setError('Incorrect email or password')
+          }
+        })
     }
-    onRegister()
+    onLog()
   }
   const handleSubmitReset = (p) => {
     p.preventDefault()
@@ -42,16 +50,11 @@ const LoginPage = ({ t }) => {
     onReset()
   }
 
-  // const goToForgotPassword = () => {
-  //   <NavLink to='/reset' >{t('reset:title')}</NavLink>
-  //   console.log('ya')
-  // }
-
   const clickLogOut = () => {
-    if (currentUser) {
+    if (currentUser.currentUser !== null) {
       signOut(auth)
     } else {
-      console.log('No user connected')
+      setError('No user connected')
     }
   }
 
@@ -83,10 +86,11 @@ const LoginPage = ({ t }) => {
             <button className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
           </span>
           <div id="botones_log">
-            <button className="primary login">Acceder</button>  <button className="primary" onClick={clickLogOut}> Salir</button>
+            <button className="primary login">Acceder</button>  <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>
           </div>
         </div>
       </form>
+      {error && <div>{error}</div>}
       <Box>
         <Title>{t('¿Has olvidado tu contraseña?')}</Title>
         <form className="LoginPage" onSubmit={handleSubmitReset}>
