@@ -33,6 +33,16 @@ form.LoginPage{
   flex-direction: rows;
 }
 
+#error{
+  color: #df1818;
+  opacity: 0.6;
+}
+
+#success{
+  color: #2d7c08;
+  opacity: 0.6;
+}
+
 #imagenes{
   display: flex;
   flex-direction: row;

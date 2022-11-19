@@ -18,22 +18,26 @@ const LoginPage = ({ t }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [errormail, setErrorMail] = useState('')
   const [success, setSuccess] = useState('')
   const [shown, setShown] = React.useState(false)
+  const [show, setShow] = React.useState(false)
   const currentUser = useContext(AuthContext)
 
   const handleSubmit = (e) => {
     e.preventDefault()
     function onLog () {
       signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-        setError(' ')
+        setError(null)
         setSuccess('Inicio de sesión realizado con éxito')
         console.log('Successful login')
+        setShow(true)
       })
         .catch((error) => {
           const errorCode = error.code.toString()
           console.log(errorCode)
           if (errorCode !== ' ') {
+            setSuccess(null)
             setError('Email o contraseña incorrecto')
           }
         })
@@ -44,10 +48,13 @@ const LoginPage = ({ t }) => {
     p.preventDefault()
     function onReset () {
       console.log(email)
-      sendPasswordResetEmail(auth, email).catch((error) =>
+      if (errormail != null) {
+        setErrorMail(null)
+      }
+      sendPasswordResetEmail(auth, email).catch((error) => {
         console.log(error)
-      )
-      console.log('Email sent')
+        setErrorMail('Email no registrado')
+      })
     }
     onReset()
   }
@@ -55,8 +62,7 @@ const LoginPage = ({ t }) => {
   const clickLogOut = () => {
     if (currentUser.currentUser !== null) {
       signOut(auth)
-    } else {
-      setError('No hay ninguna sesión activa')
+      setShow(false)
     }
   }
 
@@ -88,11 +94,11 @@ const LoginPage = ({ t }) => {
             <button className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
           </span>
           <div id="botones_log">
-            <button className="primary login">Acceder</button>  <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>
+            {!show && <button className="primary login">Acceder</button>}  {show && <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>}
           </div>
         </div>
-        {error && <div> {error} </div>}
-        {success && <div>{success}</div>}
+        {error && <div id="error"> {error} </div>}
+        {success && <div id="success">{success}</div>}
       </form>
       <Box>
         <Title>{t('¿Has olvidado tu contraseña?')}</Title>
@@ -106,6 +112,7 @@ const LoginPage = ({ t }) => {
             ></input>
             <button className="second">Cambiar contraseña</button>
           </div>
+          {errormail && <div id="error"> {errormail} </div>}
         </form>
       </Box>
     </div>
