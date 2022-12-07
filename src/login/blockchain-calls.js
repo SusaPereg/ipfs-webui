@@ -23,7 +23,7 @@ export const addFiles = async (id_, name_, user_) => {
   })
 }
 export const deleteFiles = async (id_, user_) => {
-  return fetch('http://localhost:8082/api/delete/metadata/:metadata_index' + id_, {
+  return fetch('http://localhost:8082/api/delete/metadata/' + id_, {
     method: 'DELETE',
     headers: {
       'Access-Control-Allow-Headers': '*',
