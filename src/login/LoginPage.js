@@ -21,7 +21,6 @@ const LoginPage = ({ t }) => {
   const [errormail, setErrorMail] = useState('')
   const [success, setSuccess] = useState('')
   const [shown, setShown] = React.useState(false)
-  const [show, setShow] = React.useState(false)
   const currentUser = useContext(AuthContext)
 
   const handleSubmit = (e) => {
@@ -30,8 +29,10 @@ const LoginPage = ({ t }) => {
       signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
         setError(null)
         setSuccess('Inicio de sesión realizado con éxito')
+        setTimeout(() => {
+          setSuccess(null)
+        }, 1500)
         console.log('Successful login')
-        setShow(true)
       })
         .catch((error) => {
           const errorCode = error.code.toString()
@@ -39,6 +40,9 @@ const LoginPage = ({ t }) => {
           if (errorCode !== ' ') {
             setSuccess(null)
             setError('Email o contraseña incorrecto')
+            setTimeout(() => {
+              setError(null)
+            }, 1500)
           }
         })
     }
@@ -54,6 +58,9 @@ const LoginPage = ({ t }) => {
       sendPasswordResetEmail(auth, email).catch((error) => {
         console.log(error)
         setErrorMail('Email no registrado')
+        setTimeout(() => {
+          setErrorMail(null)
+        }, 1500)
       })
     }
     onReset()
@@ -62,7 +69,6 @@ const LoginPage = ({ t }) => {
   const clickLogOut = () => {
     if (currentUser.currentUser !== null) {
       signOut(auth)
-      setShow(false)
     }
   }
 
@@ -94,7 +100,7 @@ const LoginPage = ({ t }) => {
             <button type="button" className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
           </span>
           <div id="botones_log">
-            {(!show && currentUser.currentUser === null) && <button className="primary login">Acceder</button>}  {(show || currentUser.currentUser !== null) && <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>}
+            { currentUser.currentUser === null && <button className="primary login">Acceder</button>}  { currentUser.currentUser !== null && <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>}
           </div>
         </div>
         {error && <div id="error"> {error} </div>}
