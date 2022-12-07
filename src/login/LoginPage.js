@@ -91,10 +91,10 @@ const LoginPage = ({ t }) => {
               type={shown ? 'text' : 'password'}
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            <button className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
+            <button type="button" className="primary show" onClick={switchShown}>{shown ? 'Ocultar' : 'Mostrar'}</button>
           </span>
           <div id="botones_log">
-            {!show && <button className="primary login">Acceder</button>}  {show && <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>}
+            {(!show && currentUser.currentUser === null) && <button className="primary login">Acceder</button>}  {(show || currentUser.currentUser !== null) && <button type = 'button' className="primary" onClick={clickLogOut}> Salir</button>}
           </div>
         </div>
         {error && <div id="error"> {error} </div>}
