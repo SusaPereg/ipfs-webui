@@ -343,74 +343,75 @@ const actions = () => ({
       await store.doFilesFetch()
     }
   }),
-  /**
-   * Deletes `files` with provided paths. On completion (success sor fail) will
-   * trigger `doFilesFetch` to update the state.
-   * @param {Object} args
-   * @param {FileStat[]} args.files
-   * @param {boolean} args.removeLocally
-   * @param {boolean} args.removeRemotely
-   * @param {string[]} args.remoteServices
-   */
-  doFilesDelete: ({ files, removeLocally, removeRemotely, remoteServices }) => perform(ACTIONS.DELETE, async (ipfs, { store }) => {
-    ensureMFS(store)
 
-    if (files.length === 0) return undefined
-    /**
-     * Execute function asynchronously in a best-effort fashion.
-     * We don't want any edge case (like a directory with multiple copies of
-     * same file) to crash webui, nor want to bother user with false-negatives
-     * @param {Function} fn
-     */
-    const tryAsync = async fn => { try { await fn() } catch (_) {} }
-    try {
-      for (const file of files) {
-        console.log(file)
-        console.log('files to delete' + files.forEach)
-        const cid = file.cid.toString()
-        console.log(cid)
-        console.log('PATH: ' + realMfsPath(file.path))
-        const currentUser = auth.currentUser
-        const user = currentUser?.email.split('@')[0]
-        await deleteFiles(cid, user).then((e) => {
-          console.log(e)
-          if (e === 'error') {
-            throw Error('FETCH NOT RIGHT')
-          }
-        }).catch(error => {
-          console.log(error)
-          return 'error'
-        })
-      }
-      await Promise.all(
-        files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
-          recursive: true
-        }))
-      )
-      // Pin cleanup only if MFS removal was successful
-      if (removeRemotely) {
-        // remote unpin can be slow, so we do this async in best-effort fashion
-        files.forEach(file => remoteServices.map(async service => tryAsync(() =>
-          ipfs.pin.remote.rm({ cid: [file.cid], service })
-        )))
-      }
-      if (removeLocally) {
-        // removal of local pin can fail if same CID is present twice,
-        // this is done in best-effort as well
-        await Promise.all(files.map(async file => file.pinned && tryAsync(() =>
-          ipfs.pin.rm(file.cid)
-        )))
-      }
-      const src = files[0].path
-      const path = src.slice(0, src.lastIndexOf('/'))
-      await store.doUpdateHash(path)
+  // /**
+  //  * Deletes `files` with provided paths. On completion (success sor fail) will
+  //  * trigger `doFilesFetch` to update the state.
+  //  * @param {Object} args
+  //  * @param {FileStat[]} args.files
+  //  * @param {boolean} args.removeLocally
+  //  * @param {boolean} args.removeRemotely
+  //  * @param {string[]} args.remoteServices
+  //  */
+  // doFilesDelete: ({ files, removeLocally, removeRemotely, remoteServices }) => perform(ACTIONS.DELETE, async (ipfs, { store }) => {
+  //   ensureMFS(store)
 
-      return undefined
-      // try removing from MFS first
-    } finally {
-      await store.doFilesFetch()
-    }
-  }),
+  //   if (files.length === 0) return undefined
+  //   /**
+  //    * Execute function asynchronously in a best-effort fashion.
+  //    * We don't want any edge case (like a directory with multiple copies of
+  //    * same file) to crash webui, nor want to bother user with false-negatives
+  //    * @param {Function} fn
+  //    */
+  //   const tryAsync = async fn => { try { await fn() } catch (_) {} }
+  //   try {
+  //     for (const file of files) {
+  //       console.log(file)
+  //       console.log('files to delete' + files.forEach)
+  //       const cid = file.cid.toString()
+  //       console.log(cid)
+  //       console.log('PATH: ' + realMfsPath(file.path))
+  //       const currentUser = auth.currentUser
+  //       const user = currentUser?.email.split('@')[0]
+  //       await deleteFiles(cid, user).then((e) => {
+  //         console.log(e)
+  //         if (e === 'error') {
+  //           throw Error('FETCH NOT RIGHT')
+  //         }
+  //       }).catch(error => {
+  //         console.log(error)
+  //         return 'error'
+  //       })
+  //     }
+  //     await Promise.all(
+  //       files.map(async file => ipfs.files.rm(realMfsPath(file.path), {
+  //         recursive: true
+  //       }))
+  //     )
+  //     // Pin cleanup only if MFS removal was successful
+  //     if (removeRemotely) {
+  //       // remote unpin can be slow, so we do this async in best-effort fashion
+  //       files.forEach(file => remoteServices.map(async service => tryAsync(() =>
+  //         ipfs.pin.remote.rm({ cid: [file.cid], service })
+  //       )))
+  //     }
+  //     if (removeLocally) {
+  //       // removal of local pin can fail if same CID is present twice,
+  //       // this is done in best-effort as well
+  //       await Promise.all(files.map(async file => file.pinned && tryAsync(() =>
+  //         ipfs.pin.rm(file.cid)
+  //       )))
+  //     }
+  //     const src = files[0].path
+  //     const path = src.slice(0, src.lastIndexOf('/'))
+  //     await store.doUpdateHash(path)
+
+  //     return undefined
+  //     // try removing from MFS first
+  //   } finally {
+  //     await store.doFilesFetch()
+  //   }
+  // }),
   // /**
   //  * Deletes `files` with provided paths. On completion (success sor fail) will
   //  * trigger `doFilesFetch` to update the state.
@@ -481,6 +482,73 @@ const actions = () => ({
   //     await store.doFilesFetch()
   //   }
   // }),
+
+  /**
+   * Deletes `files` with provided paths. On completion (success sor fail) will
+   * trigger `doFilesFetch` to update the state.
+   * @param {Object} args
+   * @param {FileStat[]} args.files
+   * @param {boolean} args.removeLocally
+   * @param {boolean} args.removeRemotely
+   * @param {string[]} args.remoteServices
+   */
+  doFilesDelete: ({ files, removeLocally, removeRemotely, remoteServices }) => perform(ACTIONS.DELETE, async (ipfs, { store }) => {
+    ensureMFS(store)
+
+    if (files.length === 0) return undefined
+
+    console.log('length: ' + files.length)
+    /**
+     * Execute function asynchronously in a best-effort fashion.
+     * We don't want any edge case (like a directory with multiple copies of
+     * same file) to crash webui, nor want to bother user with false-negatives
+     * @param {Function} fn
+     */
+    const tryAsync = async fn => { try { await fn() } catch (_) {} }
+    try {
+      for (const file of files) {
+        console.log(file)
+        const cid = file.cid.toString()
+        console.log(cid)
+        console.log('PATH: ' + realMfsPath(file.path))
+        const currentUser = auth.currentUser
+        const user = currentUser?.email.split('@')[0]
+        const seguir = await deleteFiles(cid, user).then((e) => {
+          console.log(e)
+          if (e === 'error') {
+            throw Error('FETCH NOT RIGHT')
+          }
+        }).catch(error => {
+          console.log(error)
+          return 'error'
+        })
+        if (seguir !== 'error') {
+          ipfs.files.rm(realMfsPath(file.path), { recursive: true })
+          // Pin cleanup only if MFS removal was successful
+          if (removeRemotely) {
+            // remote unpin can be slow, so we do this async in best-effort fashion
+            remoteServices.map(async service => tryAsync(() =>
+              ipfs.pin.remote.rm({ cid: [file.cid], service })
+            ))
+          }
+          if (removeLocally) {
+            // removal of local pin can fail if same CID is present twice,
+            // this is done in best-effort as well
+            file.pinned && tryAsync(() =>
+              ipfs.pin.rm(file.cid)
+            )
+          }
+          const src = files[0].path
+          const path = src.slice(0, src.lastIndexOf('/'))
+          await store.doUpdateHash(path)
+        }
+      }
+      return undefined
+      // try removing from MFS first
+    } finally {
+      await store.doFilesFetch()
+    }
+  }),
 
   /**
    * Adds file under the `src` path to the given `root` path. On completion will
